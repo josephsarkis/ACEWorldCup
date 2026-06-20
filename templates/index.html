@@ -441,49 +441,214 @@
     <script>
         // Preloaded default values (matches backend values)
         const PRELOADED_MATCHES = {
-            "Netherlands vs Sweden": {
+            "Netherlands vs Sweden (20 June)": {
                 home: "Netherlands", away: "Sweden",
                 h2h_home: 1.73, h2h_draw: 4.00, h2h_away: 4.60,
                 over_2_5: 1.65, under_2_5: 2.15
             },
-            "Germany vs Ivory Coast": {
+            "Germany vs Ivory Coast (20 June)": {
                 home: "Germany", away: "Ivory Coast",
                 h2h_home: 1.50, h2h_draw: 4.50, h2h_away: 6.00,
                 over_2_5: 1.53, under_2_5: 2.38
             },
-            "Ecuador vs Curaçao": {
+            "Ecuador vs Curaçao (20 June)": {
                 home: "Ecuador", away: "Curaçao",
                 h2h_home: 1.13, h2h_draw: 8.50, h2h_away: 26.00,
                 over_2_5: 1.50, under_2_5: 2.45
             },
-            "Tunisia vs Japan": {
+            "Tunisia vs Japan (20 June)": {
                 home: "Tunisia", away: "Japan",
                 h2h_home: 6.50, h2h_draw: 4.00, h2h_away: 1.58,
                 over_2_5: 1.70, under_2_5: 2.10
             },
-            "Argentina vs Poland": {
-                home: "Argentina", away: "Poland",
-                h2h_home: 1.45, h2h_draw: 4.20, h2h_away: 7.50,
-                over_2_5: 1.80, under_2_5: 1.95
-            },
-            "France vs Australia": {
-                home: "France", away: "Australia",
-                h2h_home: 1.25, h2h_draw: 5.50, h2h_away: 12.00,
-                over_2_5: 1.60, under_2_5: 2.20
-            },
-            "Brazil vs Cameroon": {
-                home: "Brazil", away: "Cameroon",
+            "Spain vs Saudi Arabia (21 June)": {
+                home: "Spain", away: "Saudi Arabia",
                 h2h_home: 1.18, h2h_draw: 6.50, h2h_away: 15.00,
                 over_2_5: 1.55, under_2_5: 2.35
             },
-            "England vs USA": {
-                home: "England", away: "USA",
-                h2h_home: 1.55, h2h_draw: 4.00, h2h_away: 6.00,
-                over_2_5: 1.75, under_2_5: 2.05
+            "Belgium vs IR Iran (21 June)": {
+                home: "Belgium", away: "Iran",
+                h2h_home: 1.35, h2h_draw: 4.80, h2h_away: 9.00,
+                over_2_5: 1.65, under_2_5: 2.10
             },
-            "Spain vs Morocco": {
-                home: "Spain", away: "Morocco",
-                h2h_home: 1.60, h2h_draw: 3.80, h2h_away: 5.50,
+            "Uruguay vs Cabo Verde (21 June)": {
+                home: "Uruguay", away: "Cabo Verde",
+                h2h_home: 1.28, h2h_draw: 5.20, h2h_away: 11.00,
+                over_2_5: 1.75, under_2_5: 1.95
+            },
+            "New Zealand vs Egypt (21 June)": {
+                home: "New Zealand", away: "Egypt",
+                h2h_home: 4.50, h2h_draw: 3.60, h2h_away: 1.80,
+                over_2_5: 1.95, under_2_5: 1.80
+            },
+            "Argentina vs Austria (22 June)": {
+                home: "Argentina", away: "Austria",
+                h2h_home: 1.45, h2h_draw: 4.20, h2h_away: 7.50,
+                over_2_5: 1.80, under_2_5: 1.95
+            },
+            "France vs Iraq (22 June)": {
+                home: "France", away: "Iraq",
+                h2h_home: 1.10, h2h_draw: 9.00, h2h_away: 26.00,
+                over_2_5: 1.40, under_2_5: 2.75
+            },
+            "Norway vs Senegal (22 June)": {
+                home: "Norway", away: "Senegal",
+                h2h_home: 2.15, h2h_draw: 3.30, h2h_away: 3.40,
+                over_2_5: 2.10, under_2_5: 1.70
+            },
+            "Jordan vs Algeria (22 June)": {
+                home: "Jordan", away: "Algeria",
+                h2h_home: 5.00, h2h_draw: 3.60, h2h_away: 1.70,
+                over_2_5: 2.00, under_2_5: 1.75
+            },
+            "Portugal vs Uzbekistan (23 June)": {
+                home: "Portugal", away: "Uzbekistan",
+                h2h_home: 1.20, h2h_draw: 6.50, h2h_away: 13.00,
+                over_2_5: 1.60, under_2_5: 2.25
+            },
+            "England vs Ghana (23 June)": {
+                home: "England", away: "Ghana",
+                h2h_home: 1.40, h2h_draw: 4.50, h2h_away: 7.50,
+                over_2_5: 1.75, under_2_5: 2.00
+            },
+            "Panama vs Croatia (23 June)": {
+                home: "Panama", away: "Croatia",
+                h2h_home: 7.00, h2h_draw: 4.20, h2h_away: 1.48,
+                over_2_5: 1.85, under_2_5: 1.90
+            },
+            "Colombia vs DR Congo (23 June)": {
+                home: "Colombia", away: "Congo DR",
+                h2h_home: 1.35, h2h_draw: 4.80, h2h_away: 9.00,
+                over_2_5: 1.70, under_2_5: 2.10
+            },
+            "Czechia vs Mexico (24 June)": {
+                home: "Czechia", away: "Mexico",
+                h2h_home: 2.80, h2h_draw: 3.30, h2h_away: 2.50,
+                over_2_5: 2.05, under_2_5: 1.72
+            },
+            "Switzerland vs Canada (24 June)": {
+                home: "Switzerland", away: "Canada",
+                h2h_home: 2.10, h2h_draw: 3.30, h2h_away: 3.60,
+                over_2_5: 1.95, under_2_5: 1.80
+            },
+            "Brazil vs Scotland (24 June)": {
+                home: "Brazil", away: "Scotland",
+                h2h_home: 1.30, h2h_draw: 5.20, h2h_away: 9.00,
+                over_2_5: 1.65, under_2_5: 2.10
+            },
+            "Morocco vs Haiti (24 June)": {
+                home: "Morocco", away: "Haiti",
+                h2h_home: 1.15, h2h_draw: 7.00, h2h_away: 18.00,
+                over_2_5: 1.50, under_2_5: 2.40
+            },
+            "Bosnia and Herzegovina vs Qatar (24 June)": {
+                home: "Bosnia and Herzegovina", away: "Qatar",
+                h2h_home: 1.85, h2h_draw: 3.50, h2h_away: 4.20,
+                over_2_5: 1.80, under_2_5: 2.00
+            },
+            "Türkiye vs United States (25 June)": {
+                home: "Turkey", away: "United States",
+                h2h_home: 2.90, h2h_draw: 3.30, h2h_away: 2.45,
+                over_2_5: 1.95, under_2_5: 1.80
+            },
+            "Curaçao vs Ivory Coast (25 June)": {
+                home: "Curaçao", away: "Ivory Coast",
+                h2h_home: 12.00, h2h_draw: 5.50, h2h_away: 1.25,
+                over_2_5: 1.60, under_2_5: 2.25
+            },
+            "Tunisia vs Netherlands (25 June)": {
+                home: "Tunisia", away: "Netherlands",
+                h2h_home: 8.50, h2h_draw: 5.00, h2h_away: 1.35,
+                over_2_5: 1.65, under_2_5: 2.15
+            },
+            "Japan vs Sweden (25 June)": {
+                home: "Japan", away: "Sweden",
+                h2h_home: 2.40, h2h_draw: 3.30, h2h_away: 2.95,
+                over_2_5: 1.90, under_2_5: 1.90
+            },
+            "Paraguay vs Australia (25 June)": {
+                home: "Paraguay", away: "Australia",
+                h2h_home: 2.70, h2h_draw: 3.20, h2h_away: 2.65,
+                over_2_5: 2.10, under_2_5: 1.70
+            },
+            "Ecuador vs Germany (25 June)": {
+                home: "Ecuador", away: "Germany",
+                h2h_home: 6.00, h2h_draw: 4.50, h2h_away: 1.50,
+                over_2_5: 1.53, under_2_5: 2.38
+            },
+            "Norway vs France (26 June)": {
+                home: "Norway", away: "France",
+                h2h_home: 4.50, h2h_draw: 3.75, h2h_away: 1.75,
+                over_2_5: 1.85, under_2_5: 1.90
+            },
+            "Senegal vs Iraq (26 June)": {
+                home: "Senegal", away: "Iraq",
+                h2h_home: 1.50, h2h_draw: 4.00, h2h_away: 7.00,
+                over_2_5: 1.95, under_2_5: 1.80
+            },
+            "Uruguay vs Spain (26 June)": {
+                home: "Uruguay", away: "Spain",
+                h2h_home: 3.40, h2h_draw: 3.30, h2h_away: 2.15,
+                over_2_5: 2.05, under_2_5: 1.72
+            },
+            "Cape Verde vs Saudi Arabia (26 June)": {
+                home: "Cabo Verde", away: "Saudi Arabia",
+                h2h_home: 2.50, h2h_draw: 3.20, h2h_away: 2.90,
+                over_2_5: 2.10, under_2_5: 1.70
+            },
+            "New Zealand vs Belgium (26 June)": {
+                home: "New Zealand", away: "Belgium",
+                h2h_home: 9.00, h2h_draw: 5.00, h2h_away: 1.33,
+                over_2_5: 1.65, under_2_5: 2.10
+            },
+            "Egypt vs Iran (26 June)": {
+                home: "Egypt", away: "Iran",
+                h2h_home: 2.30, h2h_draw: 3.20, h2h_away: 3.20,
+                over_2_5: 2.00, under_2_5: 1.75
+            },
+            "Panama vs England (27 June)": {
+                home: "Panama", away: "England",
+                h2h_home: 12.00, h2h_draw: 5.50, h2h_away: 1.25,
+                over_2_5: 1.60, under_2_5: 2.20
+            },
+            "Croatia vs Ghana (27 June)": {
+                home: "Croatia", away: "Ghana",
+                h2h_home: 1.75, h2h_draw: 3.60, h2h_away: 4.75,
+                over_2_5: 1.95, under_2_5: 1.80
+            },
+            "Colombia vs Portugal (27 June)": {
+                home: "Colombia", away: "Portugal",
+                h2h_home: 3.20, h2h_draw: 3.30, h2h_away: 2.25,
+                over_2_5: 1.85, under_2_5: 1.90
+            },
+            "DR Congo vs Uzbekistan (27 June)": {
+                home: "Congo DR", away: "Uzbekistan",
+                h2h_home: 2.90, h2h_draw: 3.20, h2h_away: 2.50,
+                over_2_5: 2.10, under_2_5: 1.70
+            },
+            "Jordan vs Argentina (27 June)": {
+                home: "Jordan", away: "Argentina",
+                h2h_home: 15.00, h2h_draw: 6.50, h2h_away: 1.18,
+                over_2_5: 1.55, under_2_5: 2.35
+            },
+            "Algeria vs Austria (27 June)": {
+                home: "Algeria", away: "Austria",
+                h2h_home: 3.10, h2h_draw: 3.30, h2h_away: 2.30,
+                over_2_5: 1.90, under_2_5: 1.90
+            },
+            "Runner-up Group A vs Runner-up Group B (28 June)": {
+                home: "Runner-up Group A", away: "Runner-up Group B",
+                h2h_home: 2.50, h2h_draw: 3.20, h2h_away: 2.80,
+                over_2_5: 2.10, under_2_5: 1.70
+            },
+            "Winner Group E vs 3rd Group A/B/C/D/F (28 June)": {
+                home: "Winner Group E", away: "3rd Group A/B/C/D/F",
+                h2h_home: 1.40, h2h_draw: 4.50, h2h_away: 7.50,
+                over_2_5: 1.75, under_2_5: 2.00
+            },
+            "Winner Group F vs Runner-up Group C (28 June)": {
+                home: "Winner Group F", away: "Runner-up Group C",
+                h2h_home: 1.80, h2h_draw: 3.50, h2h_away: 4.40,
                 over_2_5: 1.90, under_2_5: 1.90
             }
         };
