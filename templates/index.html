@@ -421,7 +421,8 @@
                     <table id="outcomes-table">
                         <thead>
                             <tr>
-                                <th>Scoreline</th>
+                                <th>Home Goals</th>
+                                <th>Away Goals</th>
                                 <th>Probability (%)</th>
                                 <th>Implied Odds (Dec)</th>
                                 <th>American Odds</th>
@@ -774,7 +775,8 @@ Optimization Loss: ${bestLoss.toFixed(5)}`;
                 }
 
                 row.innerHTML = `
-                    <td class="cell-highlight">${o.h} - ${o.a}</td>
+                    <td class="cell-highlight">${o.h}</td>
+                    <td class="cell-highlight">${o.a}</td>
                     <td>${(o.prob * 100).toFixed(2)}%</td>
                     <td>${o.decOdds.toFixed(2)}</td>
                     <td>${amOdds}</td>
