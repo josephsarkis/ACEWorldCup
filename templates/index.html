@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA World Cup 2026 - Correct Score Estimator</title>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.15);
+            --accent-blue: #3b82f6;
+            --accent-blue-hover: #2563eb;
+            --accent-purple: #8b5cf6;
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Style */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(to right, #10b981, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .badge {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        /* Top Control Card */
+        .control-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--card-shadow);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        select {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            padding: 12px 16px;
+            font-size: 15px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--accent-green);
+            color: #0f172a;
+        }
+
+        .btn-primary:hover {
+            background: #059669;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Banner Notification */
+        .notification-banner {
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Odds Display Grid */
+        .odds-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .odds-source {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .odds-source-badge {
+            background: var(--accent-blue);
+            color: #ffffff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+
+        .odds-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+
+        .odds-input-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(15, 23, 42, 0.4);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .odds-input-box label {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .odds-input-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 18px;
+            font-weight: 700;
+            width: 100%;
+            outline: none;
+            text-align: center;
+        }
+
+        /* Split Result Panels */
+        .results-split {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+        }
+
+        .fit-card, .table-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .fit-log {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            background: #0f172a;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            color: #38bdf8;
+            white-space: pre-wrap;
+            flex-grow: 1;
+            height: 480px;
+            overflow-y: auto;
+        }
+
+        /* Score Treeview Table */
+        .table-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 480px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #0f172a;
+            color: var(--text-muted);
+            font-weight: 700;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 500;
+        }
+
+        tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .cell-highlight {
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-title">
+                <h1>FIFA World Cup 2026 Estimator</h1>
+                <p>Correct Score Probability and Constrained Poisson Distribution Model</p>
+            </div>
+            <div class="badge">
+                <span class="badge-dot"></span>
+                <span>Active API Session</span>
+            </div>
+        </header>
+
+        <!-- Warning Notification Banner -->
+        <div id="api-warning" class="notification-banner">
+            <svg style="width: 20px; height: 20px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <span id="warning-text">API fetch failed. Loaded default preloaded odds data.</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="control-card">
+            <div class="input-group">
+                <label for="game-select">Select Upcoming Game</label>
+                <select id="game-select">
+                    <!-- Loaded dynamically in script -->
+                </select>
+            </div>
+            <div class="button-group">
+                <button class="btn-secondary" id="call-api-btn">Call Odds.com API</button>
+                <button class="btn-primary" id="calculate-btn">Calculate Model</button>
+            </div>
+        </div>
+
+        <!-- Odds Display -->
+        <div class="odds-card">
+            <div class="odds-source">
+                <span>Odds Source:</span>
+                <span id="source-badge" class="odds-source-badge">Preloaded Defaults</span>
+            </div>
+            <div class="odds-grid">
+                <div class="odds-input-box">
+                    <label>Home Odds</label>
+                    <input type="text" id="odds-home" value="1.73">
+                </div>
+                <div class="odds-input-box">
+                    <label>Draw Odds</label>
+                    <input type="text" id="odds-draw" value="4.00">
+                </div>
+                <div class="odds-input-box">
+                    <label>Away Odds</label>
+                    <input type="text" id="odds-away" value="4.60">
+                </div>
+                <div class="odds-input-box">
+                    <label>Over 2.5 Goals</label>
+                    <input type="text" id="odds-over" value="1.65">
+                </div>
+                <div class="odds-input-box">
+                    <label>Under 2.5 Goals</label>
+                    <input type="text" id="odds-under" value="2.15">
+                </div>
+            </div>
+        </div>
+
+        <!-- Split Results Panels -->
+        <div class="results-split">
+            <!-- Fit checks -->
+            <div class="fit-card">
+                <div class="card-header-title">Model Fit Verification</div>
+                <div id="fit-log" class="fit-log">Click "Calculate Model" to fit the distribution...</div>
+            </div>
+
+            <!-- Outcomes Table -->
+            <div class="table-card">
+                <div class="card-header-title">Correct Score Probabilities</div>
+                <div class="table-wrapper">
+                    <table id="outcomes-table">
+                        <thead>
+                            <tr>
+                                <th>Scoreline</th>
+                                <th>Probability (%)</th>
+                                <th>Implied Odds (Dec)</th>
+                                <th>American Odds</th>
+                            </tr>
+                        </thead>
+                        <tbody id="outcomes-tbody">
+                            <!-- Populate dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // Preloaded default values (matches backend values)
+        const PRELOADED_MATCHES = {
+            "Netherlands vs Sweden": {
+                home: "Netherlands", away: "Sweden",
+                h2h_home: 1.73, h2h_draw: 4.00, h2h_away: 4.60,
+                over_2_5: 1.65, under_2_5: 2.15
+            },
+            "Germany vs Ivory Coast": {
+                home: "Germany", away: "Ivory Coast",
+                h2h_home: 1.50, h2h_draw: 4.50, h2h_away: 6.00,
+                over_2_5: 1.53, under_2_5: 2.38
+            },
+            "Ecuador vs Curaçao": {
+                home: "Ecuador", away: "Curaçao",
+                h2h_home: 1.13, h2h_draw: 8.50, h2h_away: 26.00,
+                over_2_5: 1.50, under_2_5: 2.45
+            },
+            "Tunisia vs Japan": {
+                home: "Tunisia", away: "Japan",
+                h2h_home: 6.50, h2h_draw: 4.00, h2h_away: 1.58,
+                over_2_5: 1.70, under_2_5: 2.10
+            },
+            "Argentina vs Poland": {
+                home: "Argentina", away: "Poland",
+                h2h_home: 1.45, h2h_draw: 4.20, h2h_away: 7.50,
+                over_2_5: 1.80, under_2_5: 1.95
+            },
+            "France vs Australia": {
+                home: "France", away: "Australia",
+                h2h_home: 1.25, h2h_draw: 5.50, h2h_away: 12.00,
+                over_2_5: 1.60, under_2_5: 2.20
+            },
+            "Brazil vs Cameroon": {
+                home: "Brazil", away: "Cameroon",
+                h2h_home: 1.18, h2h_draw: 6.50, h2h_away: 15.00,
+                over_2_5: 1.55, under_2_5: 2.35
+            },
+            "England vs USA": {
+                home: "England", away: "USA",
+                h2h_home: 1.55, h2h_draw: 4.00, h2h_away: 6.00,
+                over_2_5: 1.75, under_2_5: 2.05
+            },
+            "Spain vs Morocco": {
+                home: "Spain", away: "Morocco",
+                h2h_home: 1.60, h2h_draw: 3.80, h2h_away: 5.50,
+                over_2_5: 1.90, under_2_5: 1.90
+            }
+        };
+
+        // DOM Elements
+        const selectEl = document.getElementById("game-select");
+        const oddsHomeEl = document.getElementById("odds-home");
+        const oddsDrawEl = document.getElementById("odds-draw");
+        const oddsAwayEl = document.getElementById("odds-away");
+        const oddsOverEl = document.getElementById("odds-over");
+        const oddsUnderEl = document.getElementById("odds-under");
+        const callApiBtn = document.getElementById("call-api-btn");
+        const calculateBtn = document.getElementById("calculate-btn");
+        const badgeEl = document.getElementById("source-badge");
+        const warningEl = document.getElementById("api-warning");
+        const warningText = document.getElementById("warning-text");
+        const fitLogEl = document.getElementById("fit-log");
+        const tbodyEl = document.getElementById("outcomes-tbody");
+
+        // Initialize drop down
+        function initApp() {
+            selectEl.innerHTML = "";
+            for (const key in PRELOADED_MATCHES) {
+                const opt = document.createElement("option");
+                opt.value = key;
+                opt.textContent = key;
+                selectEl.appendChild(opt);
+            }
+            updateOddsFields();
+            
+            selectEl.addEventListener("change", () => {
+                updateOddsFields();
+                badgeEl.textContent = "Preloaded Defaults";
+                warningEl.style.display = "none";
+            });
+
+            callApiBtn.addEventListener("click", fetchLiveOdds);
+            calculateBtn.addEventListener("click", runModelCalculations);
+        }
+
+        function updateOddsFields() {
+            const game = selectEl.value;
+            const data = PRELOADED_MATCHES[game];
+            if (data) {
+                oddsHomeEl.value = data.h2h_home.toFixed(2);
+                oddsDrawEl.value = data.h2h_draw.toFixed(2);
+                oddsAwayEl.value = data.h2h_away.toFixed(2);
+                oddsOverEl.value = data.over_2_5.toFixed(2);
+                oddsUnderEl.value = data.under_2_5.toFixed(2);
+            }
+        }
+
+        // Live API Fetching logic (routes via server-side endpoint)
+        async function fetchLiveOdds() {
+            callApiBtn.disabled = true;
+            callApiBtn.textContent = "Fetching...";
+            warningEl.style.display = "none";
+            
+            // Server-side endpoint hosted on Railway (completely avoids CORS and local network blocks)
+            const url = `/api/odds`;
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Cloud server proxy returned status ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error + " - " + (data.details || ""));
+                }
+                
+                const game = selectEl.value;
+                const preloaded = PRELOADED_MATCHES[game];
+                const homeTarget = preloaded.home.toLowerCase();
+                const awayTarget = preloaded.away.toLowerCase();
+                
+                // Find matching fixture in returned list
+                let matchedFixture = data.find(f => 
+                    f.home_team.toLowerCase().includes(homeTarget) && 
+                    f.away_team.toLowerCase().includes(awayTarget)
+                );
+                
+                if (matchedFixture) {
+                    let h = null, d = null, a = null;
+                    let over = null, under = null;
+                    
+                    // Extract markets from first bookmaker containing them
+                    for (const bookmaker of matchedFixture.bookmakers) {
+                        for (const market of bookmaker.markets) {
+                            if (market.key === "h2h") {
+                                for (const outcome of market.outcomes) {
+                                    if (outcome.name === matchedFixture.home_team) h = outcome.price;
+                                    else if (outcome.name === matchedFixture.away_team) a = outcome.price;
+                                    else if (outcome.name === "Draw") d = outcome.price;
+                                }
+                            } else if (market.key === "totals") {
+                                for (const outcome of market.outcomes) {
+                                    if (outcome.name === "Over" && outcome.point === 2.5) over = outcome.price;
+                                    else if (outcome.name === "Under" && outcome.point === 2.5) under = outcome.price;
+                                }
+                            }
+                        }
+                        if (h && over) break;
+                    }
+                    
+                    if (h && d && a) {
+                        oddsHomeEl.value = h.toFixed(2);
+                        oddsDrawEl.value = d.toFixed(2);
+                        oddsAwayEl.value = a.toFixed(2);
+                        if (over && under) {
+                            oddsOverEl.value = over.toFixed(2);
+                            oddsUnderEl.value = under.toFixed(2);
+                        } else {
+                            oddsOverEl.value = "1.85";
+                            oddsUnderEl.value = "1.95";
+                        }
+                        
+                        badgeEl.textContent = `Live API (${matchedFixture.sport_title})`;
+                        alert(`Successfully fetched live odds for ${game}!`);
+                    } else {
+                        showWarning("Fixture found, but bookmaker odds could not be parsed.");
+                    }
+                } else {
+                    showWarning(`No active live match found for '${game}' in the API fixtures list.`);
+                }
+            } catch (err) {
+                console.error(err);
+                showWarning(`API connection failed (${err.message}). Defaulting to preloaded local odds.`);
+            } finally {
+                callApiBtn.disabled = false;
+                callApiBtn.textContent = "Call Odds.com API";
+            }
+        }
+
+        function showWarning(text) {
+            warningText.textContent = text;
+            warningEl.style.display = "flex";
+        }
+
+        // Poisson Math functions
+        function factorial(n) {
+            if (n <= 1) return 1;
+            let res = 1;
+            for (let i = 2; i <= n; i++) res *= i;
+            return res;
+        }
+
+        function poissonProb(lmbda, k) {
+            return (Math.pow(lmbda, k) * Math.exp(-lmbda)) / factorial(k);
+        }
+
+        function getProbabilities(lh, la, maxGoals = 10) {
+            const probs = {};
+            let totalSum = 0;
+            for (let h = 0; h <= maxGoals; h++) {
+                for (let a = 0; a <= maxGoals; a++) {
+                    const p = poissonProb(lh, h) * poissonProb(la, a);
+                    probs[`${h}-${a}`] = p;
+                    totalSum += p;
+                }
+            }
+            
+            for (const k in probs) {
+                probs[k] /= totalSum;
+            }
+            
+            let pH = 0, pD = 0, pA = 0, pUnder = 0;
+            for (let h = 0; h <= maxGoals; h++) {
+                for (let a = 0; a <= maxGoals; a++) {
+                    const p = probs[`${h}-${a}`];
+                    if (h > a) pH += p;
+                    else if (h === a) pD += p;
+                    else pA += p;
+                    
+                    if (h + a < 2.5) pUnder += p;
+                }
+            }
+            return [pH, pD, pA, pUnder, probs];
+        }
+
+        // Model Calculation solver
+        function runModelCalculations() {
+            const hOdds = parseFloat(oddsHomeEl.value);
+            const dOdds = parseFloat(oddsDrawEl.value);
+            const aOdds = parseFloat(oddsAwayEl.value);
+            const overOdds = parseFloat(oddsOverEl.value);
+            const underOdds = parseFloat(oddsUnderEl.value);
+
+            if (isNaN(hOdds) || isNaN(dOdds) || isNaN(aOdds) || isNaN(overOdds) || isNaN(underOdds)) {
+                alert("Please ensure all odds fields contain valid decimal numbers.");
+                return;
+            }
+
+            const ipHome = 1.0 / hOdds;
+            const ipDraw = 1.0 / dOdds;
+            const ipAway = 1.0 / aOdds;
+            const totalIp = ipHome + ipDraw + ipAway;
+            
+            const pHomeTarget = ipHome / totalIp;
+            const pDrawTarget = ipDraw / totalIp;
+            const pAwayTarget = ipAway / totalIp;
+
+            const ipOver = 1.0 / overOdds;
+            const ipUnder = 1.0 / underOdds;
+            const totalOuIp = ipOver + ipUnder;
+            
+            const pUnder25Target = ipUnder / totalOuIp;
+            const pOver25Target = ipOver / totalOuIp;
+
+            let bestLoss = 999999;
+            let bestLh = 0;
+            let bestLa = 0;
+            const steps = 150;
+
+            for (let i = 0; i <= steps; i++) {
+                const lh = 0.4 + i * (3.5 - 0.4) / steps;
+                for (let j = 0; j <= steps; j++) {
+                    const la = 0.4 + j * (3.5 - 0.4) / steps;
+                    
+                    const [pH, pD, pA, pUnder] = getProbabilities(lh, la);
+                    
+                    const loss = Math.pow(pH - pHomeTarget, 2) + 
+                                 Math.pow(pD - pDrawTarget, 2) + 
+                                 Math.pow(pA - pAwayTarget, 2) + 
+                                 Math.pow(pUnder - pUnder25Target, 2);
+                                 
+                    if (loss < bestLoss) {
+                        bestLoss = loss;
+                        bestLh = lh;
+                        bestLa = la;
+                    }
+                }
+            }
+
+            const lh = bestLh;
+            const la = bestLa;
+            const [pH, pD, pA, pUnder, scoreProbs] = getProbabilities(lh, la);
+
+            fitLogEl.innerHTML = `OPTIMAL MODEL GOAL RATES:
+ - Home Expected Goals: ${lh.toFixed(2)}
+ - Away Expected Goals: ${la.toFixed(2)}
+ - Total Expected Goals: ${(lh + la).toFixed(2)}
+
+MODEL FIT VERIFICATION:
+Home Win Probability:
+  Model: ${(pH * 100).toFixed(1)}%
+  Target: ${(pHomeTarget * 100).toFixed(1)}%
+
+Draw Probability:
+  Model: ${(pD * 100).toFixed(1)}%
+  Target: ${(pDrawTarget * 100).toFixed(1)}%
+
+Away Win Probability:
+  Model: ${(pA * 100).toFixed(1)}%
+  Target: ${(pAwayTarget * 100).toFixed(1)}%
+
+Under 2.5 Goals Prob:
+  Model: ${(pUnder * 100).toFixed(1)}%
+  Target: ${(pUnder25Target * 100).toFixed(1)}%
+
+Over 2.5 Goals Prob:
+  Model: ${((1 - pUnder) * 100).toFixed(1)}%
+  Target: ${(pOver25Target * 100).toFixed(1)}%
+
+Optimization Loss: ${bestLoss.toFixed(5)}`;
+
+            tbodyEl.innerHTML = "";
+            const outcomes = [];
+            
+            for (const key in scoreProbs) {
+                const prob = scoreProbs[key];
+                if (prob >= 0.01) {
+                    const [h, a] = key.split("-").map(Number);
+                    const decOdds = 1.0 / prob;
+                    outcomes.push({ h, a, prob, decOdds });
+                }
+            }
+
+            outcomes.sort((a, b) => b.prob - a.prob);
+
+            outcomes.forEach(o => {
+                const row = document.createElement("tr");
+                let amOdds = "";
+                if (o.decOdds >= 2.0) {
+                    amOdds = `+${Math.round((o.decOdds - 1) * 100)}`;
+                } else {
+                    amOdds = `-${Math.round(100 / (o.decOdds - 1))}`;
+                }
+
+                row.innerHTML = `
+                    <td class="cell-highlight">${o.h} - ${o.a}</td>
+                    <td>${(o.prob * 100).toFixed(2)}%</td>
+                    <td>${o.decOdds.toFixed(2)}</td>
+                    <td>${amOdds}</td>
+                `;
+                tbodyEl.appendChild(row);
+            });
+        }
+
+        window.addEventListener("DOMContentLoaded", initApp);
+    </script>
+</body>
+</html>
