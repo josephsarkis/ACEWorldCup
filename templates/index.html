@@ -653,6 +653,19 @@
             }
         };
 
+        function normalizeTeamName(name) {
+            if (!name) return "";
+            let n = name.toLowerCase();
+            n = n.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            n = n.replace(/[^a-z0-9\s]/g, "");
+            if (n.includes("cabo verde") || n.includes("cape verde")) return "cape verde";
+            if (n.includes("ivory coast") || n.includes("cote divoire") || n.includes("cote d ivoire")) return "ivory coast";
+            if (n.includes("congo dr") || n.includes("dr congo") || n.includes("democratic republic of the congo") || n.includes("drc")) return "dr congo";
+            if (n.includes("iran") || n.includes("ir iran")) return "iran";
+            if (n.includes("usa") || n.includes("united states") || n.includes("united states of america")) return "usa";
+            return n;
+        }
+
         // DOM Elements
         const selectEl = document.getElementById("game-select");
         const oddsHomeEl = document.getElementById("odds-home");
@@ -723,14 +736,15 @@
                 
                 const game = selectEl.value;
                 const preloaded = PRELOADED_MATCHES[game];
-                const homeTarget = preloaded.home.toLowerCase();
-                const awayTarget = preloaded.away.toLowerCase();
+                const homeTarget = normalizeTeamName(preloaded.home);
+                const awayTarget = normalizeTeamName(preloaded.away);
                 
                 // Find matching fixture in returned list
-                let matchedFixture = data.find(f => 
-                    f.home_team.toLowerCase().includes(homeTarget) && 
-                    f.away_team.toLowerCase().includes(awayTarget)
-                );
+                let matchedFixture = data.find(f => {
+                    const apiHome = normalizeTeamName(f.home_team);
+                    const apiAway = normalizeTeamName(f.away_team);
+                    return apiHome.includes(homeTarget) && apiAway.includes(awayTarget);
+                });
                 
                 if (matchedFixture) {
                     let h = null, d = null, a = null;
